@@ -1,0 +1,30 @@
+{
+    "user": {
+        "firstName": "Emily",
+        "lastName": "Johnson",
+        "isActive": true,
+        "age": 28,
+        "email": "emily.j@example.com"
+    },
+    "preferences": {
+        "theme": "dark",
+        "notificationsEnabled": true,
+        "language": "English"
+    },
+    "recentActivities": [
+        {
+            "type": "login",
+            "timestamp": "2023-10-15T08:30:00Z"
+        },
+        {
+            "type": "purchase",
+            "item": "Ebook: C# Basics",
+            "timestamp": "2023-10-14T15:45:00Z"
+        }
+    ],
+    "statistics": {
+        "totalLogins": 42,
+        "totalPurchases": 3,
+        "totalSpent": 49.99
+    }
+}

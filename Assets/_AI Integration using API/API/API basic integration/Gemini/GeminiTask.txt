@@ -1,0 +1,15 @@
+Task 1: Give Your AI a Personality
+Choose a personality (e.g., friendly, serious, sarcastic).
+Decide how it greets users.
+Define how it responds to different situations (happy, confused, negative input).
+Choose a language style (formal, casual, funny).
+Test and adjust if needed.
+Deliverable: A short set of instructions describing the AI’s personality.
+
+
+Task 2: Make AI Trigger Actions
+List possible AI responses (e.g., happy, confused, unsure).
+Decide what action should happen for each response.
+Make sure the right action happens for each response.
+Test with different responses to see if it works.
+Deliverable: A simple plan explaining how AI responses trigger actions.
