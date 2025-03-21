@@ -2411,8 +2411,8 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   contextSize: 10000
   batchSize: 512
-  model: Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf
-  chatTemplate: llama3 chat
+  model: qwen2-0_5b-instruct-q4_k_m.gguf
+  chatTemplate: chatml
   lora: 
   loraWeights: 
   flashAttention: 0
@@ -2422,9 +2422,9 @@ MonoBehaviour:
   SSLKey: 
   SSLKeyPath: 
   minContextLength: 0
-  maxContextLength: 131072
+  maxContextLength: 32768
   embeddingsOnly: 0
-  embeddingLength: 4096
+  embeddingLength: 896
 --- !u!4 &1047848255
 Transform:
   m_ObjectHideFlags: 0
@@ -2984,6 +2984,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthbar: {fileID: 238401167}
+  health: 100
 --- !u!1 &1471424588
 GameObject:
   m_ObjectHideFlags: 0
@@ -3164,6 +3165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthbar: {fileID: 1960406871}
+  health: 100
 --- !u!1 &1537760933
 GameObject:
   m_ObjectHideFlags: 0
