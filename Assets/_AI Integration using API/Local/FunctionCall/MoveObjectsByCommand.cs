@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using LLMUnity;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,10 @@ public class MoveObjectsByCommand : MonoBehaviour
     // References to required components
     public LLMCharacter llmCharacter;        // Reference to the AI language model
     public InputField playerText;            // Input field where player types commands
-    
+    [SerializeField] Button sendButton;
+    [SerializeField] private TextMeshProUGUI _responseText; // Text field to display the response
+    [SerializeField, TextArea(3, 10)] private string _systemInstructions; // Instructions for the system
+
     // References to the UI objects that can be moved
     public RectTransform blueSquare;
     public RectTransform redSquare;
@@ -19,6 +23,7 @@ public class MoveObjectsByCommand : MonoBehaviour
     {
         // Set up the input field to listen for submissions
         playerText.onSubmit.AddListener(onInputFieldSubmit);
+        sendButton.onClick.AddListener(() => onInputFieldSubmit(playerText.text));
         playerText.Select();  // Automatically focus the input field
     }
 
@@ -32,26 +37,34 @@ public class MoveObjectsByCommand : MonoBehaviour
     }
 
     // Constructs the prompt for the AI to understand direction commands
-    string ConstructDirectionPrompt(string message)
+    string ConstructDamagePrompt(string message)
     {
-        string prompt = "From the input, which direction is mentioned? Choose from the following options:\n\n";
+        string prompt = "From the input, which Skill is mentioned? Choose from the following options:\n\n";
         prompt += "Input:" + message + "\n\n";
         prompt += "Choices:\n";
-        foreach (string functionName in GetFunctionNames<DirectionFunctions>()) 
+        foreach (string functionName in GetFunctionNames<AttackFunctions>()) 
             prompt += $"- {functionName}\n";
-        prompt += "\nAnswer directly with the choice, focusing only on direction";
+        prompt += "\nAnswer directly with the choice, focusing only on Skill";
         return prompt;
     }
 
     // Constructs the prompt for the AI to understand color commands
-    string ConstructColorPrompt(string message)
+    string ConstructHeroPrompt(string message)
     {
-        string prompt = "From the input, which color is mentioned? Choose from the following options:\n\n";
+        string prompt = "From the input, which Hero is mentioned? Choose from the following options:\n\n";
         prompt += "Input:" + message + "\n\n";
         prompt += "Choices:\n";
-        foreach (string functionName in GetFunctionNames<ColorFunctions>()) 
+        foreach (string functionName in GetFunctionNames<HeroFunctions>()) 
             prompt += $"- {functionName}\n";
-        prompt += "\nAnswer directly with the choice, focusing only on color";
+        prompt += "\nAnswer directly with the choice, focusing only on Hero";
+        return prompt;
+    }
+
+    string ConstructResponsePrompt(string message)
+    {
+        string prompt = "Answer the input using the system instructions\n\n";
+        prompt += "Input:" + message + "\n\n";
+        prompt += "SystemInstructions:" + _systemInstructions + "\n\n";
         return prompt;
     }
 
@@ -62,28 +75,28 @@ public class MoveObjectsByCommand : MonoBehaviour
         playerText.interactable = false;
 
         // Ask the AI to interpret the direction and color from the input
-        string getDirection = await llmCharacter.Chat(ConstructDirectionPrompt(message));
-        string getColor = await llmCharacter.Chat(ConstructColorPrompt(message));
+        string getDamage = await llmCharacter.Chat(ConstructDamagePrompt(message));
+        string getHero = await llmCharacter.Chat(ConstructHeroPrompt(message));
+        string getResponse = await llmCharacter.Chat(ConstructResponsePrompt(message));
 
         // Convert the AI's responses into actual Color and Vector3 values using reflection
-        Color color = (Color)typeof(ColorFunctions).GetMethod(getColor).Invoke(null, null);
-        Vector3 direction = (Vector3)typeof(DirectionFunctions).GetMethod(getDirection).Invoke(null, null);
+        Color hero = (Color)typeof(HeroFunctions).GetMethod(getHero).Invoke(null, null);
+        int damage = (int)typeof(AttackFunctions).GetMethod(getDamage).Invoke(null, null);
 
         // Log the results for debugging
-        Debug.Log($"Direction function called: {getDirection}, returned: {direction}");
-        Debug.Log($"Color function called: {getColor}, returned: {color}");
+        Debug.Log($"Damage function called: {getDamage}, returned: {damage}");
+        Debug.Log($"Color function called: {getHero}, returned: {hero}");
 
         // Get the object to move based on the color
-        RectTransform selectedObject = GetObjectByColor(color);
+        RectTransform selectedObject = GetObjectByColor(hero);
         if (selectedObject != null)
         {
             Debug.Log($"Selected object: {selectedObject.name}");
-            // Move the object in the specified direction (multiplied by 100 for visible movement)
-            selectedObject.anchoredPosition += (Vector2)direction * 100f;
+            selectedObject.GetComponent<Enemy>().TakeDamage(damage);
         }
         else
         {
-            Debug.Log("No object selected (NoneColor returned)");
+            _responseText.text = getResponse;
         }
 
         // Re-enable input

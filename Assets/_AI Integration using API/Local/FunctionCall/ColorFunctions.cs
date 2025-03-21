@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 // This class contains static methods that return different colors
-public class ColorFunctions
+public class HeroFunctions
 {
     // Each method returns a Unity Color value
-    public static Color BlueColor()
+    public static Color RightHero()
     {
         return Color.blue;
     }
 
-    public static Color RedColor()
+    public static Color LeftHero()
     {
         return Color.red;
     }
