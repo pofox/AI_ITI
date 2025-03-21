@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿
 // This class contains static methods that return different directions as Vector3
 public class AttackFunctions
 {
